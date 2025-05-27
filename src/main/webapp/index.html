@@ -103,19 +103,55 @@
 
 <script type="module">
     import "/js/auth/auth.js";
-    import "/js/api/taskService.js";
+    import { createTask } from "/js/api/taskService.js";
     import "/js/utils/helpers.js";
     import { loadAndRenderTasks, attachTaskEventHandlers } from "/js/controllers/taskController.js";
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const defaultFilters = {
+    const defaultFilters = {
         status: "all",
         priority: "all",
         sortBy: "createdDate"
-      };
+    };
 
-      loadAndRenderTasks(defaultFilters);
-      attachTaskEventHandlers();
+    document.addEventListener("DOMContentLoaded", () => {
+        loadAndRenderTasks(defaultFilters);
+        attachTaskEventHandlers();
+
+        document.getElementById("addTaskBtn").addEventListener("click", function () {
+            document.getElementById("modalTitle").textContent = "Thêm công việc mới";
+            document.getElementById("taskForm").reset();
+            document.getElementById("taskModal").style.display = "block";
+        });
+
+        document.getElementById("closeModal").addEventListener("click", function () {
+            document.getElementById("taskModal").style.display = "none";
+        });
+
+        window.addEventListener("click", function (e) {
+            const modal = document.getElementById("taskModal");
+            if (e.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+
+        document.getElementById("taskForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const title = document.getElementById("taskTitle").value.trim();
+            const description = document.getElementById("taskDescription").value.trim();
+            const dueDate = document.getElementById("taskDueDate").value;
+            const priority = document.getElementById("taskPriority").value;
+
+            const taskData = { title, description, dueDate, priority };
+
+            createTask(taskData, function (success, message) {
+                if (success) {
+                    document.getElementById("taskModal").style.display = "none";
+                    loadAndRenderTasks(defaultFilters);
+                } else {
+                    alert("Thêm công việc thất bại: " + message);
+                }
+            });
+        });
     });
 </script>
 

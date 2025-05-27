@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Cấu hình kết nối SQL Server 2022 -->
+        <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
+        <property name="hibernate.connection.url">jdbc:sqlserver://localhost:1433;databaseName=TaskManagerDB;encrypt=true;trustServerCertificate=true</property>
+        <property name="hibernate.connection.username">sa</property>
+        <property name="hibernate.connection.password">123456789</property>
+
+        <!-- Cấu hình Hibernate Dialect cho SQL Server -->
+        <property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- Mapping các entity -->
+        <mapping class="entity.User"/>
+        <mapping class="entity.Task"/>
+    </session-factory>
+</hibernate-configuration>
