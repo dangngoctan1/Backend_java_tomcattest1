@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Đăng ký</title>
+    <link rel="stylesheet" href="js/styles.css">
+</head>
+<body>
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>Task Manager</h1>
+            <p>Tạo tài khoản để bắt đầu</p>
+        </div>
+        <div class="auth-form">
+            <h2>Đăng ký</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="fullname">Họ và tên:</label>
+                    <input type="text" id="fullname" required />
+                </div>
+                <div class="form-group">
+                    <label for="username">Tên đăng nhập:</label>
+                    <input type="text" id="username" required />
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required />
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu:</label>
+                    <input type="password" id="password" required />
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Xác nhận mật khẩu:</label>
+                    <input type="password" id="confirmPassword" required />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Đăng ký</button>
+            </form>
+            <div class="auth-links">
+                <p>Đã có tài khoản? <a href="/tomcattest1/login.html">Đăng nhập</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="module">
+    import { register } from "/js/auth/auth.js";
+
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const fullname = document.getElementById('fullname').value;
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (password !== confirmPassword) {
+        alert('Mật khẩu không khớp!');
+        return;
+      }
+
+      register(fullname, username, email, password, function(success) {
+        if (success) window.location.href = 'login.html';
+      });
+    });
+</script>
+
+</body>
+</html>
