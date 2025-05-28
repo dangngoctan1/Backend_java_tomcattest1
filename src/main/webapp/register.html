@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Manager - Đăng ký</title>
-    <link rel="stylesheet" href="js/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 <div class="auth-page">
@@ -44,27 +44,33 @@
         </div>
     </div>
 </div>
-<script type="module">
-    import { register } from "/js/auth/auth.js";
 
+<script src="js/auth/auth.js"></script>
+<script>
+    console.log('Register form script loaded');
     document.getElementById('registerForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const fullname = document.getElementById('fullname').value;
-      const username = document.getElementById('username').value;
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
+        console.log('Nút đăng ký được nhấn');
+        e.preventDefault();
+        const fullname = document.getElementById('fullname').value;
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
 
-      if (password !== confirmPassword) {
-        alert('Mật khẩu không khớp!');
-        return;
-      }
+        if (password !== confirmPassword) {
+            alert('Mật khẩu không khớp!');
+            return;
+        }
 
-      register(fullname, username, email, password, function(success) {
-        if (success) window.location.href = 'login.html';
-      });
+        register(fullname, username, email, password, function(success, message) {
+            if (success) {
+                alert('Đăng ký thành công!');
+                window.location.href = '/tomcattest1/login.html';
+            } else {
+                alert('Đăng ký thất bại: ' + message);
+            }
+        });
     });
 </script>
-
 </body>
 </html>

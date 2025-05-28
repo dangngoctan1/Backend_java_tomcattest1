@@ -114,12 +114,11 @@
       <version>0.4</version>
     </dependency>
 
-    <!-- Byte Buddy -->
+    <!-- Byte Buddy - REMOVED test scope, now available at runtime -->
     <dependency>
       <groupId>net.bytebuddy</groupId>
       <artifactId>byte-buddy</artifactId>
       <version>1.14.18</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 

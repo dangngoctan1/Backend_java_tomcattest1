@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task Manager</title>
-    <link rel="stylesheet" href="js/styles.css" />
+    <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 <div class="container">
@@ -68,10 +68,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Thêm công việc mới</h2>
-                <span id="closeModal" class="close">&times;</span>
+                <span id="closeModal" class="close">×</span>
             </div>
             <div class="modal-body">
                 <form id="taskForm">
+                    <input type="hidden" id="taskIdInput" name="taskId" value="">
                     <div class="form-group">
                         <label for="taskTitle">Tiêu đề:</label>
                         <input type="text" id="taskTitle" name="title" required />
@@ -101,59 +102,11 @@
     </div>
 </div>
 
-<script type="module">
-    import "/js/auth/auth.js";
-    import { createTask } from "/js/api/taskService.js";
-    import "/js/utils/helpers.js";
-    import { loadAndRenderTasks, attachTaskEventHandlers } from "/js/controllers/taskController.js";
-
-    const defaultFilters = {
-        status: "all",
-        priority: "all",
-        sortBy: "createdDate"
-    };
-
-    document.addEventListener("DOMContentLoaded", () => {
-        loadAndRenderTasks(defaultFilters);
-        attachTaskEventHandlers();
-
-        document.getElementById("addTaskBtn").addEventListener("click", function () {
-            document.getElementById("modalTitle").textContent = "Thêm công việc mới";
-            document.getElementById("taskForm").reset();
-            document.getElementById("taskModal").style.display = "block";
-        });
-
-        document.getElementById("closeModal").addEventListener("click", function () {
-            document.getElementById("taskModal").style.display = "none";
-        });
-
-        window.addEventListener("click", function (e) {
-            const modal = document.getElementById("taskModal");
-            if (e.target === modal) {
-                modal.style.display = "none";
-            }
-        });
-
-        document.getElementById("taskForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            const title = document.getElementById("taskTitle").value.trim();
-            const description = document.getElementById("taskDescription").value.trim();
-            const dueDate = document.getElementById("taskDueDate").value;
-            const priority = document.getElementById("taskPriority").value;
-
-            const taskData = { title, description, dueDate, priority };
-
-            createTask(taskData, function (success, message) {
-                if (success) {
-                    document.getElementById("taskModal").style.display = "none";
-                    loadAndRenderTasks(defaultFilters);
-                } else {
-                    alert("Thêm công việc thất bại: " + message);
-                }
-            });
-        });
-    });
-</script>
-
+<script src="js/auth/auth.js"></script>
+<script src="js/utils/helpers.js"></script>
+<script src="js/views/taskView.js"></script>
+<script src="js/api/taskService.js"></script>
+<script src="js/controllers/taskController.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

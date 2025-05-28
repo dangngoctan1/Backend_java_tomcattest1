@@ -1,3 +1,5 @@
+// taskService.js - API calls for tasks
+
 function createQueryString(params) {
     var query = [];
     for (var key in params) {
@@ -13,11 +15,7 @@ function createQueryString(params) {
 function parseJavaDateTime(dateTimeString) {
     if (!dateTimeString) return null;
     try {
-        var isoString = dateTimeString;
-        if (dateTimeString.indexOf('T') !== -1 && dateTimeString.indexOf('Z') === -1 && dateTimeString.indexOf('+') === -1) {
-            isoString = dateTimeString + 'Z';
-        }
-        return new Date(isoString);
+        return new Date(dateTimeString);
     } catch (e) {
         console.warn("Failed to parse date: " + dateTimeString);
         return null;
@@ -346,3 +344,13 @@ function getTaskDueState(task) {
     if (daysDiff <= 2) return "soon";
     return "normal";
 }
+
+// Export các hàm ra window để frontend gọi được
+window.getAllTasks = getAllTasks;
+window.getFilteredTasks = getFilteredTasks;
+window.getTaskById = getTaskById;
+window.createTask = createTask;
+window.updateTask = updateTask;
+window.deleteTask = deleteTask;
+window.updateTaskStatus = updateTaskStatus;
+window.getTaskDueState = getTaskDueState;

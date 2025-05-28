@@ -1,7 +1,3 @@
-// auth.js
-// Authentication related functions
-
-// Hàm hỗ trợ tạo chuỗi query từ object (thay thế URLSearchParams)
 function createQueryString(params) {
     var query = [];
     for (var key in params) {
@@ -14,41 +10,37 @@ function createQueryString(params) {
     return query.join("&");
 }
 
-// Check if user is logged in
 function isLoggedIn() {
     var token = localStorage.getItem("token");
     if (!token) return false;
 
-    // Kiểm tra token có hết hạn không (nếu có thông tin expiry)
     try {
-        var tokenData = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+        var tokenData = JSON.parse(atob(token.split('.')[1]));
         if (tokenData.exp && tokenData.exp < Date.now() / 1000) {
             localStorage.removeItem("token");
             localStorage.removeItem("currentUser");
             return false;
         }
     } catch (e) {
-        // Token không phải định dạng JWT hoặc bị lỗi, vẫn cho phép sử dụng
+        // Token không phải định dạng JWT hoặc bị lỗi
     }
-
     return true;
 }
 
-// Get current user data
 function getCurrentUser() {
     var userData = localStorage.getItem("currentUser");
     return userData ? JSON.parse(userData) : null;
 }
 
-// Login
 function login(username, password, callback) {
+    console.log('Hàm login được gọi');
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/tomcattest1/api/login", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("Content-Type", "application/json");
 
-    var data = createQueryString({
+    var data = JSON.stringify({
         username: username,
-        password: password,
+        password: password
     });
 
     xhr.onreadystatechange = function () {
@@ -91,17 +83,17 @@ function login(username, password, callback) {
     xhr.send(data);
 }
 
-// Register
 function register(fullname, username, email, password, callback) {
+    console.log('Hàm register được gọi');
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/tomcattest1/api/register", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("Content-Type", "application/json");
 
-    var data = createQueryString({
+    var data = JSON.stringify({
         fullname: fullname,
         username: username,
         email: email,
-        password: password,
+        password: password
     });
 
     xhr.onreadystatechange = function () {
@@ -129,8 +121,8 @@ function register(fullname, username, email, password, callback) {
     xhr.send(data);
 }
 
-// Logout
 function logout() {
+    console.log('Hàm logout được gọi');
     var token = localStorage.getItem("token");
 
     if (token) {
@@ -140,7 +132,6 @@ function logout() {
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status !== 200 && xhr.status !== 204) {
-                // Log error but still proceed with local logout
                 console.warn("Server logout failed, proceeding with local logout");
             }
         };
@@ -152,26 +143,29 @@ function logout() {
         xhr.send();
     }
 
-    // Always clear local storage regardless of server response
     localStorage.removeItem("token");
     localStorage.removeItem("currentUser");
-    window.location.href = "login.html";
+    window.location.href = "/tomcattest1/login.html";
 }
 
-// Auto-logout on token expiry
 function checkTokenExpiry() {
     if (!isLoggedIn() && !window.location.pathname.includes("login.html") && !window.location.pathname.includes("register.html")) {
-        window.location.href = "login.html";
+        window.location.href = "/tomcattest1/login.html";
     }
 }
 
-// If current page is not login or register, check authentication
-const currentPath = window.location.pathname;
-if (!currentPath.includes("login.html") && !currentPath.includes("register.html")) {
+if (!window.location.pathname.includes("login.html") && !window.location.pathname.includes("register.html")) {
     if (!isLoggedIn()) {
-        window.location.href = "login.html";
+        window.location.href = "/tomcattest1/login.html";
     } else {
-        // Check token expiry every 5 minutes
         setInterval(checkTokenExpiry, 5 * 60 * 1000);
     }
 }
+
+window.createQueryString = createQueryString;
+window.isLoggedIn = isLoggedIn;
+window.getCurrentUser = getCurrentUser;
+window.login = login;
+window.register = register;
+window.logout = logout;
+window.checkTokenExpiry = checkTokenExpiry;

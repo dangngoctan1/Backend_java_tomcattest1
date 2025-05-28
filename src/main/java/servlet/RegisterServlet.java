@@ -2,6 +2,8 @@ package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import service.UserService;
 
 import jakarta.servlet.ServletException;
@@ -17,6 +19,7 @@ import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS
 
 @WebServlet("/api/register")
 public class RegisterServlet extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger(RegisterServlet.class);
     private UserService userService;
     private ObjectMapper objectMapper;
 
@@ -50,16 +53,18 @@ public class RegisterServlet extends HttpServlet {
             success.put("message", "User registered successfully");
             objectMapper.writeValue(response.getWriter(), success);
         } catch (RuntimeException e) {
+            logger.warn("Registration failed: {}", e.getMessage());
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setContentType("application/json");
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             objectMapper.writeValue(response.getWriter(), error);
         } catch (Exception e) {
+            logger.error("Internal server error during registration", e);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.setContentType("application/json");
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Internal server error");
+            error.put("error", "Internal server error: " + e.getMessage());
             objectMapper.writeValue(response.getWriter(), error);
         }
     }
